@@ -91,17 +91,19 @@ export function GameSummary({ resultText, moves, color, engine, onInspect, onRev
             </ol>
           )}
           {state.review.moments.length > 0 && (
-            <p className="muted hint">Tap a move to see it. Red is what you played, green is the better move.</p>
+            <p className="muted hint">Tap a move to see it. Red is what you played, blue is the better move.</p>
           )}
           <p>{state.review.takeaway}</p>
         </>
       )}
 
       <div className="actions">
+        <button className="quiet" onClick={onExit}>
+          Back to path
+        </button>
         <button className="primary" onClick={onNewGame}>
           New game
         </button>
-        <button onClick={onExit}>Back to path</button>
       </div>
     </div>
   )

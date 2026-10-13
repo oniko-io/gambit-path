@@ -10,6 +10,7 @@ import { findHazard, PIECE_VALUE, type Hazard } from '../lib/hazards.ts'
 import { legalDests } from '../lib/position.ts'
 import { Board } from './Board.tsx'
 import { GameSummary } from './GameSummary.tsx'
+import { ScreenHeader } from './ScreenHeader.tsx'
 
 // a bot that answers instantly is hard to follow
 const BOT_DELAY_MS = 600
@@ -50,11 +51,13 @@ interface Pending {
 function Tray({ label, pieces, color, lead }: { label: string; pieces: PieceSymbol[]; color: Color; lead: number }) {
   return (
     <div className="tray">
-      <span className="muted">{label}</span>
       {pieces.length > 0 && (
-        <span className={`tray-pieces ${color}`}>{pieces.map((p) => GLYPH[p]).join('')}</span>
+        <>
+          <span className="muted">{label}</span>
+          <span className={`tray-pieces ${color}`}>{pieces.map((p) => GLYPH[p]).join('')}</span>
+        </>
       )}
-      {lead > 0 && <span className="muted">+{lead}</span>}
+      {lead > 0 && <span className="pill">+{lead}</span>}
     </div>
   )
 }
@@ -165,7 +168,7 @@ export function GameScreen({ config, onGameOver, onReviewed, onNewGame, onExit }
     if (inspected) {
       const played: DrawShape = { orig: inspected.played[0] as Key, dest: inspected.played[1] as Key, brush: 'red' }
       const best = inspected.best
-      return best ? [played, { orig: best.from as Key, dest: best.to as Key, brush: 'green' }] : [played]
+      return best ? [played, { orig: best.from as Key, dest: best.to as Key, brush: 'blue' }] : [played]
     }
     return pending ? [{ orig: pending.hazard.square, brush: 'red' }] : []
   }, [inspected, pending])
@@ -203,13 +206,7 @@ export function GameScreen({ config, onGameOver, onReviewed, onNewGame, onExit }
 
   return (
     <main className="screen">
-      <header className="lesson-bar">
-        <button className="ghost" onClick={onExit} aria-label="Back to path">
-          ←
-        </button>
-        <span>You vs Bot</span>
-        <span className="muted">Level {level}</span>
-      </header>
+      <ScreenHeader title="You vs Bot" onBack={onExit} aside={`Level ${level}`} />
 
       <p className="goal">
         {inspected
@@ -238,13 +235,15 @@ export function GameScreen({ config, onGameOver, onReviewed, onNewGame, onExit }
       <Tray label="You took" pieces={taken.byMe} color={bot} lead={taken.lead} />
 
       {pending && (
-        <div className="result">
+        <div className="result warn">
           <p>{pending.hazard.text}</p>
           <div className="actions">
+            <button className="quiet" onClick={() => commit(pending.from, pending.to)}>
+              Play it anyway
+            </button>
             <button className="primary" onClick={() => setPending(null)}>
               Take back
             </button>
-            <button onClick={() => commit(pending.from, pending.to)}>Play it anyway</button>
           </div>
         </div>
       )}
@@ -264,10 +263,12 @@ export function GameScreen({ config, onGameOver, onReviewed, onNewGame, onExit }
 
       {!pending && !end && (
         <div className="status">
-          <button onClick={undo} disabled={!canUndo}>
+          <button className="quiet small" onClick={undo} disabled={!canUndo}>
             Undo
           </button>
-          <button onClick={onNewGame}>Quit game</button>
+          <button className="quiet small" onClick={onNewGame}>
+            Quit game
+          </button>
         </div>
       )}
     </main>

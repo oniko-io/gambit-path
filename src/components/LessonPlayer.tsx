@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { LESSON_ICON } from '../lessons/icons.ts'
 import type { Lesson } from '../lessons/stage1.ts'
 import { CollectLevel } from './CollectLevel.tsx'
 import { PositionLevel } from './PositionLevel.tsx'
+import { ScreenHeader } from './ScreenHeader.tsx'
 
 interface Props {
   lesson: Lesson
@@ -49,15 +51,19 @@ export function LessonPlayer({ lesson, onLevelCleared, onRunFinished, onExit }: 
       : `Score: ${runTotal}/${lesson.levels.length * 3}. You need ${lesson.passStars}. Replay the lessons that felt shaky, then try again.`
 
   if (phase !== 'play') {
+    const success = phase === 'finished' && (!isTest || passed)
     return (
       <main className="screen card-screen">
-        <h1>{phase === 'intro' ? lesson.title : finishedTitle}</h1>
-        {phase === 'intro' ? (
-          lesson.intro.map((line) => <p key={line}>{line}</p>)
-        ) : (
-          <p>{finishedText}</p>
-        )}
-        <div className="actions">
+        <div className="intro">
+          <span className={`badge big${success ? ' gold' : ''}`}>{success ? '★' : LESSON_ICON[lesson.id]}</span>
+          <h1>{phase === 'intro' ? lesson.title : finishedTitle}</h1>
+          {phase === 'intro' ? (
+            lesson.intro.map((line) => <p key={line}>{line}</p>)
+          ) : (
+            <p>{finishedText}</p>
+          )}
+        </div>
+        <div className="actions stacked">
           {phase === 'intro' ? (
             <button className="primary" onClick={() => startLevel(0)}>
               Start
@@ -67,7 +73,11 @@ export function LessonPlayer({ lesson, onLevelCleared, onRunFinished, onExit }: 
               Back to path
             </button>
           )}
-          {phase === 'intro' && <button onClick={onExit}>Back</button>}
+          {phase === 'intro' && (
+            <button className="quiet" onClick={onExit}>
+              Back
+            </button>
+          )}
         </div>
       </main>
     )
@@ -78,15 +88,12 @@ export function LessonPlayer({ lesson, onLevelCleared, onRunFinished, onExit }: 
 
   return (
     <main className="screen">
-      <header className="lesson-bar">
-        <button className="ghost" onClick={onExit} aria-label="Back to path">
-          ←
-        </button>
-        <span>{lesson.title}</span>
-        <span className="muted">
-          {levelIdx + 1}/{lesson.levels.length}
-        </span>
-      </header>
+      <ScreenHeader
+        title={lesson.title}
+        onBack={onExit}
+        aside={`${levelIdx + 1}/${lesson.levels.length}`}
+        steps={{ count: lesson.levels.length, current: result ? levelIdx + 1 : levelIdx }}
+      />
 
       {'fen' in level ? (
         <PositionLevel key={levelKey} level={level} onCleared={handleCleared} />
@@ -107,13 +114,17 @@ export function LessonPlayer({ lesson, onLevelCleared, onRunFinished, onExit }: 
           </div>
           <p>{result.note}</p>
           <div className="actions">
+            {result.rating < 3 && !isTest && (
+              <button className="quiet" onClick={() => startLevel(levelIdx)}>
+                Try again
+              </button>
+            )}
             <button
               className="primary"
               onClick={() => (isLast ? setPhase('finished') : startLevel(levelIdx + 1))}
             >
               {isLast ? 'Finish' : 'Next'}
             </button>
-            {result.rating < 3 && !isTest && <button onClick={() => startLevel(levelIdx)}>Try again</button>}
           </div>
         </div>
       )}

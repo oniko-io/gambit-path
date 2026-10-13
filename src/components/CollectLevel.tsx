@@ -74,9 +74,9 @@ export function CollectLevel({ level, piece, onCleared }: Props) {
       </p>
       <Board fen={fen} dests={dests} shapes={shapes} onMove={handleMove} />
       <div className="status">
-        <span>Moves: {moves}</span>
+        <span className="counter">Moves: {moves}</span>
         {!done && (
-          <button onClick={reset} disabled={moves === 0}>
+          <button className="quiet small" onClick={reset} disabled={moves === 0}>
             Reset
           </button>
         )}

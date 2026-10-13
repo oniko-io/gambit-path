@@ -58,7 +58,7 @@ export function PositionLevel({ level, onCleared }: Props) {
       <p className="goal">{GOAL_TEXT[level.goal]}</p>
       <Board fen={fen} dests={dests} lastMove={lastMove} check={check} onMove={handleMove} />
       <div className="status">
-        <span>Wrong tries: {mistakes}</span>
+        <span className="counter">Wrong tries: {mistakes}</span>
       </div>
       {status !== 'done' && feedback && <p className="tip wrong">{feedback}</p>}
       {status !== 'done' && !feedback && level.tip && <p className="tip">{level.tip}</p>}

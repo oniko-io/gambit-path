@@ -1,5 +1,6 @@
 import { MAX_LEVEL } from '../lib/bot.ts'
 import type { GameStats, SideChoice } from '../lib/games.ts'
+import { ScreenHeader } from './ScreenHeader.tsx'
 
 const SIDES: SideChoice[] = ['white', 'black', 'random']
 const LEVELS = Array.from({ length: MAX_LEVEL }, (_, i) => i + 1)
@@ -14,17 +15,9 @@ interface Props {
 export function GameSetup({ stats, onChange, onStart, onExit }: Props) {
   return (
     <main className="screen">
-      <header className="lesson-bar">
-        <button className="ghost" onClick={onExit} aria-label="Back to path">
-          ←
-        </button>
-        <span>New game</span>
-        <span className="muted">
-          {stats.wins}W {stats.losses}L {stats.draws}D
-        </span>
-      </header>
+      <ScreenHeader title="New game" onBack={onExit} aside={`${stats.wins}W ${stats.losses}L ${stats.draws}D`} />
 
-      <section>
+      <section className="card">
         <h2>Your side</h2>
         <div className="choices">
           {SIDES.map((side) => (
@@ -34,15 +27,16 @@ export function GameSetup({ stats, onChange, onStart, onExit }: Props) {
               aria-pressed={stats.side === side}
               onClick={() => onChange({ ...stats, side })}
             >
+              <span className={`badge side ${side}`} />
               {side[0].toUpperCase() + side.slice(1)}
             </button>
           ))}
         </div>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Difficulty</h2>
-        <div className="choices wrap">
+        <div className="choices">
           <button
             className={stats.difficulty === 'auto' ? 'chosen' : ''}
             aria-pressed={stats.difficulty === 'auto'}
@@ -50,6 +44,8 @@ export function GameSetup({ stats, onChange, onStart, onExit }: Props) {
           >
             Auto
           </button>
+        </div>
+        <div className="choices grid">
           {LEVELS.map((level) => (
             <button
               key={level}
@@ -68,7 +64,7 @@ export function GameSetup({ stats, onChange, onStart, onExit }: Props) {
         </p>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Blunder warnings</h2>
         <div className="choices">
           <button
@@ -91,7 +87,7 @@ export function GameSetup({ stats, onChange, onStart, onExit }: Props) {
         </p>
       </section>
 
-      <div className="actions">
+      <div className="actions stacked">
         <button className="primary" onClick={onStart}>
           Start game
         </button>
