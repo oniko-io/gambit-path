@@ -2,6 +2,10 @@
 
 Personal chess tutor PWA for one learner who started from zero and plays mostly on an Android phone. The folder is named `chess`; the app and package are `gambit-path`.
 
+## Where things stand
+
+Live at https://oniko-io.github.io/gambit-path/ and installed on the learner's phone. Stage 1, openings, bot games with review, backup and the interface redesign are done. The learner plays in spare moments and reports back; the next planned work is Stage 2 in `docs/roadmap.md`. Ask how the bot difficulty and the look feel on the real phone before building more.
+
 ## Commands
 
 - `npm run dev -- --host`: dev server reachable from the phone on the same wifi
@@ -15,6 +19,7 @@ Personal chess tutor PWA for one learner who started from zero and plays mostly 
 - Mobile first: portrait, tap-to-move, touch targets at least 48px.
 - Short sessions, one obvious next step. Do not add menus or settings the learner has to think about.
 - Explain why in plain language. The learner does not know chess jargon until a lesson has taught it.
+- The home screen leads with one next-step card. Keep it that way when adding sections.
 - Local only: no backend, no account. State lives in `localStorage` under `gambit-path:progress` and `gambit-path:games`. Changing the shape of stored data must keep old saves loading.
 
 ## How it fits together
@@ -32,12 +37,23 @@ Personal chess tutor PWA for one learner who started from zero and plays mostly 
 - Blunder warnings: `src/lib/hazards.ts`, a rule check without the engine (mate in one, undefended piece, piece attacked by a cheaper one).
 - Game review: `src/lib/analysis.ts` scores every position at depth 10 and explains the worst moves from templates.
 
+## Interface
+
+- All styling is in `src/index.css`, driven by the colour and radius variables at the top. No CSS framework, no web fonts (the app must work offline).
+- Button roles: `primary` (filled, one per view, placed right or bottom for the thumb), `quiet` (grey secondary), `link` (text only), `small` for controls next to the board.
+- Reuse `ScreenHeader` (back button, title, optional step segments), `Icon` (inline SVG), and the `card`, `rows`, `node`, `badge`, `pill`, `choices` classes before inventing new ones.
+- Every lesson needs a badge in `src/lessons/icons.ts`. Chess symbols there carry U+FE0E so Android does not draw them as emoji.
+- The board theme overrides chessground under `.board cg-board`. Hint arrows use the blue brush because green disappears on the green squares.
+
 ## Checking UI changes
 
-There is no test suite. Changes so far were verified by driving the dev server with `puppeteer-core` and `/usr/bin/google-chrome-stable` at a 390x800 touch viewport, tapping squares by coordinate, and reading the screenshots. Unlock everything first by writing full progress into `localStorage`.
+There is no test suite. Changes so far were verified by driving the dev server with `puppeteer-core` and `/usr/bin/google-chrome-stable` at a 390x800 touch viewport, tapping squares by coordinate, and reading the screenshots. Unlock everything first by writing full progress into `localStorage`, or by opening a `#import=` link. With Stage 1 complete, "Play a game" is the hero card, not a row in the lesson list, and the lesson rows are folded behind "Review all 11 lessons".
 
 ## Known gaps
 
+- Only one stage exists in code: `STAGE1` is used directly by `App.tsx`, `PathMap.tsx` and the content check. Stage 2 needs that generalised to a list of stages first.
 - Pawn promotion always makes a queen; there is no picker.
+- No automatic deploy on push: the GitHub login on this machine lacks the `workflow` scope. `npm run deploy` is the way.
+- The learner once lost all progress by using an incognito tab. Stage 1 was restored with an import link; real star counts and game history from before are gone.
 - Never tested on a real phone by the developer side; only the learner has used it there.
 - The app is GPL-3.0 because Stockfish and chessground are. The repository is public for that reason.

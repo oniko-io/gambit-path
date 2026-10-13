@@ -9,9 +9,11 @@ The loop the app is built around: **learn** (2 minutes) → **drill** (5 minutes
 - **Games**: side and difficulty picker, 8 bot levels with automatic adjustment, blunder warnings, captured pieces, undo.
 - **Game review**: worst three moves with a reason and a better move, one main lesson per game, mistake types saved across games.
 - **Online**: public repository, GitHub Pages deploy, progress backup and transfer.
+- **Interface redesign**: next-step card, grouped lessons with icons and progress, shared header, new board theme, clear button roles.
 
 ## Next
 
+0. **Feedback from real use**: bot difficulty curve, anything that looks off on the phone, review speed on long games. Small fixes before new content.
 1. **Stage 2, Survive**: piece values, spotting hanging pieces, counting attackers and defenders, checkmate with king and queen, checkmate with king and rook.
 2. **Drills from your games**: turn each reviewed mistake into a puzzle, and bring failed ones back after 1, 3 and 7 days.
 3. **Weakness profile**: use the saved mistake types to choose what the daily session trains.
@@ -27,5 +29,7 @@ The loop the app is built around: **learn** (2 minutes) → **drill** (5 minutes
 
 - Coach that answers free-form questions, using an AI model. It would only put engine findings into words, never judge positions itself. Needs an API key entered on the device and costs money per use.
 - Promotion picker instead of always a queen.
+- Automatic deploy when code is pushed (needs the `workflow` permission on the GitHub login).
+- Reminder to save a backup code now and then, since progress lives only in the browser.
 - Bot that follows opening lines, so learned openings last longer in real games.
 - Sync between phone and computer.

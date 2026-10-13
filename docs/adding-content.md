@@ -1,6 +1,6 @@
 # Adding content
 
-All content is plain data. After any change run `npm run check`: it replays every level and line with the rules engine and reports anything illegal or unsolvable.
+All content is plain data. After any change run `npm run check`: it replays every level and line with the rules engine and reports anything illegal or unsolvable. Then `npm run deploy` to put it on the phone.
 
 ## A lesson
 
@@ -18,6 +18,8 @@ Lessons live in the `STAGE1` array in `src/lessons/stage1.ts`. Their order in th
 ```
 
 Adding `passStars: 24` turns a lesson into a test: no hints, no retries, passed once a single run earns that many stars.
+
+Every lesson also needs a badge: add its `id` to `LESSON_ICON` in `src/lessons/icons.ts`. Use a chess piece symbol followed by `TEXT`, or a single notation sign such as `+` or `#`. Without it the badge is empty.
 
 ### Collect level
 
