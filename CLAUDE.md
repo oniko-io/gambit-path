@@ -1,6 +1,6 @@
 # Gambit Path
 
-Personal chess tutor PWA for one learner who started from zero and plays mostly on an Android phone. The folder is named `chess`; the app and package are `gambit-path`.
+Personal chess tutor PWA for one learner who started from zero and plays mostly on an Android phone.
 
 ## Where things stand
 
