@@ -12,6 +12,7 @@ rm -rf .git
 git init -q -b gh-pages
 git add -A
 git commit -q -m "Deploy $(git -C .. rev-parse --short HEAD)"
-git push -f -q "$remote" gh-pages
+# the GitHub CLI supplies the login, so no separate git credential setup is needed
+git -c credential.helper='!gh auth git-credential' push -f -q "$remote" gh-pages
 rm -rf .git
 echo "Published. Live in about a minute: https://oniko-io.github.io/gambit-path/"
